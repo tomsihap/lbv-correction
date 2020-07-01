@@ -21,3 +21,11 @@ Dans un terminal dans le dossier du projet :
 
 - `symfony server:start`
 - Lancez l'application à l'adresse indiquée par le terminal (habituellement https://localhost:8000)
+
+#### 4. Tester l'application
+
+Les utilisateurs suivants sont disponibles :
+
+- Login : `user@user.com` / Mot de passe : `user@user.com`
+- Login : `user2@user.com` / Mot de passe : `user2@user.com`
+- Login : `admin@user.com` / Mot de passe : `admin@user.com`

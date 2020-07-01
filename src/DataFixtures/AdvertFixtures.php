@@ -46,7 +46,8 @@ class AdvertFixtures extends Fixture implements DependentFixtureInterface
          */
         for ($i = 0; $i < 2; $i++) {
             $advert = new Advert();
-            $advert->setName($faker->realText(100));
+            $advert->setName($faker->text(50));
+            $advert->setDescription($faker->realText(500));
             $advert->setBrand($this->brandRepository->find(random_int(1, 5)));
             $advert->setType($this->advertTypeRepository->find(random_int(1, 2)));
             $advert->setUser($users[array_rand($users)]);
@@ -59,7 +60,8 @@ class AdvertFixtures extends Fixture implements DependentFixtureInterface
          */
         for ($i = 0; $i < 4; $i++) {
             $advert = new Advert();
-            $advert->setName($faker->realText(100));
+            $advert->setName($faker->text(50));
+            $advert->setDescription($faker->realText(500));
             $advert->setBrand($this->brandRepository->find(random_int(1, 5)));
             $advert->setType($this->advertTypeRepository->find(random_int(1, 2)));
             $advert->setUser($user2);
@@ -73,7 +75,7 @@ class AdvertFixtures extends Fixture implements DependentFixtureInterface
          */
         for ($i = 0; $i < 4; $i++) {
             $advert = new Advert();
-            $advert->setName($faker->realText(10));
+            $advert->setName($faker->text(50));
             $advert->setDescription($faker->realText(500));
             $advert->setBrand($this->brandRepository->find(random_int(1, 5)));
             $advert->setType($this->advertTypeRepository->find(random_int(1, 2)));
