@@ -47,4 +47,31 @@ class AdvertRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findByType($type)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.type', 'type')
+            ->andWhere('type.name = :type')
+            ->setParameter('type', $type)
+            ->orderBy('a.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findBySearch(?string $search)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.type', 'type')
+            ->innerJoin('a.brand', 'brand')
+            ->orWhere('type.name LIKE :search')
+            ->orWhere('a.name LIKE :search')
+            ->orWhere('a.description LIKE :search')
+            ->orWhere('brand.name LIKE :search')
+            ->setParameter('search','%' . $search . '%')
+            ->orderBy('a.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

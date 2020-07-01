@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,15 +20,6 @@ class UserController extends AbstractController
      */
     public function profile() : Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
-    }
-
-    /**
-     * @Route("/admin/users", name="user_index")
-     */
-    public function index() : Response {
-        return new response();
+        return $this->render('user/profile.html.twig');
     }
 }

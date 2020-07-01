@@ -42,6 +42,16 @@ class UserFixtures extends Fixture
 
         $manager->persist($userStandard);
 
+        $userStandard2 = new User();
+        $userStandard2->setEmail("user2@user.com");
+        $userStandard2->setFirstname("Luke");
+        $userStandard2->setLastname("Skywalker");
+        $userStandard2->setPassword(
+            $this->encoder->encodePassword($userStandard2, "user2@user.com")
+        );
+
+        $manager->persist($userStandard2);
+
         $manager->flush();
     }
 }

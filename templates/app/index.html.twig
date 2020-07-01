@@ -17,4 +17,40 @@
         </div>
     </div>
 
+    <hr>
+
+    <h2>Nos annonces encore disponibles</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Date de publication</th>
+            <th>Titre de l'annonce</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for advert in adverts %}
+            <tr>
+                <td>
+                    {{ advert.createdAt|date('d/m/Y à H:i') }}<br>
+                    <span class="badge badge-warning">Type d'annonce: {{ advert.type.name }}</span>
+                </td>
+                <td>
+                    <a href="{{ path('advert_show', {'id': advert.id}) }}">{{ advert.name }}</a><br>
+                    <span class="badge badge-primary">Marque: {{ advert.brand.name }}</span>
+
+                    {% if advert.bookingUser %}
+                        <span class="badge badge-danger">Réservée: Oui</span>
+                    {% else %}
+                        <span class="badge badge-success">Réservée: Non</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">Aucune annonce pour le moment.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
 {% endblock %}

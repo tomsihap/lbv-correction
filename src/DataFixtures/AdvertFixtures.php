@@ -31,9 +31,15 @@ class AdvertFixtures extends Fixture implements DependentFixtureInterface
 
         $faker = Factory::create('fr_FR');
 
-        $user = $this->userRepository->findOneBy([
+        $user1 = $this->userRepository->findOneBy([
             "email" => "user@user.com"
         ]);
+
+        $user2 = $this->userRepository->findOneBy([
+            "email" => "user2@user.com"
+        ]);
+
+        $users = [$user1, $user2];
 
         /**
          * Non booked averts
@@ -41,24 +47,40 @@ class AdvertFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 2; $i++) {
             $advert = new Advert();
             $advert->setName($faker->realText(100));
-            $advert->setBrand($this->brandRepository->find(random_int(1, 10)));
-            $advert->setIsBooked(true);
+            $advert->setBrand($this->brandRepository->find(random_int(1, 5)));
             $advert->setType($this->advertTypeRepository->find(random_int(1, 2)));
-            $advert->setUser($user);
+            $advert->setUser($users[array_rand($users)]);
             $advert->setCreatedAt($faker->dateTimeBetween("- 1 year", "now"));
+            $manager->persist($advert);
         }
 
         /**
-         * Booked adverts
+         * Booked adverts by user 1
          */
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             $advert = new Advert();
             $advert->setName($faker->realText(100));
-            $advert->setBrand($this->brandRepository->find(random_int(1, 10)));
-            $advert->setIsBooked(true);
+            $advert->setBrand($this->brandRepository->find(random_int(1, 5)));
             $advert->setType($this->advertTypeRepository->find(random_int(1, 2)));
-            $advert->setUser($user);
+            $advert->setUser($user2);
             $advert->setCreatedAt($faker->dateTimeBetween("- 1 year", "now"));
+            $advert->setBookingUser($user1);
+            $manager->persist($advert);
+        }
+
+        /**
+         * Booked adverts by user 2
+         */
+        for ($i = 0; $i < 4; $i++) {
+            $advert = new Advert();
+            $advert->setName($faker->realText(10));
+            $advert->setDescription($faker->realText(500));
+            $advert->setBrand($this->brandRepository->find(random_int(1, 5)));
+            $advert->setType($this->advertTypeRepository->find(random_int(1, 2)));
+            $advert->setUser($user1);
+            $advert->setCreatedAt($faker->dateTimeBetween("- 1 year", "now"));
+            $advert->setBookingUser($user2);
+            $manager->persist($advert);
         }
 
         $manager->flush();

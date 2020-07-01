@@ -3,37 +3,57 @@
 {% block title %}Advert index{% endblock %}
 
 {% block body %}
-    <h1>Advert index</h1>
+    <h1>Toutes nos annonces</h1>
+    <ul class="list-group list-group-horizontal">
+        <li class="list-group-item flex-fill {% if dataFilter is not defined or dataFilter != 'Location' or dataFilter != 'Vente' %}list-group-item-primary{% endif %}">
+            <a href="{{ path('advert_index') }}">
+                Toutes les annonces
+            </a>
+        </li>
+        <li class="list-group-item flex-fill {% if dataFilter is defined and dataFilter == 'Location' %}list-group-item-primary{% endif %}">
+            <a href="{{ path('advert_index') ~ '?filter=Location'}}">
+                Locations uniquement
+            </a>
+        </li>
+        <li class="list-group-item flex-fill {% if dataFilter is defined and dataFilter == 'Vente' %}list-group-item-primary{% endif %}">
+            <a href="{{ path('advert_index') ~ '?filter=Vente'}}">
+                Ventes uniquement
+            </a>
+        </li>
+    </ul>
 
-    <table class="table">
+    <hr>
+
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>IsBooked</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
+                <th>Date de publication</th>
+                <th>Titre de l'annonce</th>
             </tr>
         </thead>
         <tbody>
         {% for advert in adverts %}
             <tr>
-                <td>{{ advert.id }}</td>
-                <td>{{ advert.name }}</td>
-                <td>{{ advert.isBooked ? 'Yes' : 'No' }}</td>
-                <td>{{ advert.createdAt ? advert.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('advert_show', {'id': advert.id}) }}">show</a>
-                    <a href="{{ path('advert_edit', {'id': advert.id}) }}">edit</a>
+                    {{ advert.createdAt|date('d/m/Y à H:i') }}<br>
+                    <span class="badge badge-warning">Type d'annonce: {{ advert.type.name }}</span>
+                </td>
+                <td>
+                    <a href="{{ path('advert_show', {'id': advert.id}) }}">{{ advert.name }}</a><br>
+                    <span class="badge badge-primary">Marque: {{ advert.brand.name }}</span>
+
+                    {% if advert.bookingUser %}
+                        <span class="badge badge-danger">Réservée: Oui</span>
+                    {% else %}
+                        <span class="badge badge-success">Réservée: Non</span>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="2">Aucune annonce pour le moment.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('advert_new') }}">Create new</a>
 {% endblock %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Advert;
 use App\Form\AdvertType;
 use App\Repository\AdvertRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,16 +13,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/advert")
+ * @IsGranted("ROLE_USER")
  */
 class AdvertController extends AbstractController
 {
     /**
      * @Route("/", name="advert_index", methods={"GET"})
      */
-    public function index(AdvertRepository $advertRepository): Response
+    public function index(Request $request, AdvertRepository $advertRepository): Response
     {
+        $filter = $request->query->get('filter');
+
+        if (in_array($filter, ['Location', 'Vente'])) {
+            $adverts = $advertRepository->findByType($filter);
+        }
+        else {
+            $adverts = $advertRepository->findBy([], ['createdAt' => 'desc']);
+        }
         return $this->render('advert/index.html.twig', [
-            'adverts' => $advertRepository->findAll(),
+            'adverts' => $adverts,
+            'dataFilter' => $filter,
         ]);
     }
 
@@ -35,6 +46,8 @@ class AdvertController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $advert->setUser($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($advert);
             $entityManager->flush();
@@ -76,6 +89,29 @@ class AdvertController extends AbstractController
             'advert' => $advert,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @param Advert $advert
+     * @return Response
+     * @Route("/{id}/booking", name="advert_book", methods={"GET"})
+     */
+    public function bookAdvert(Advert $advert) : Response
+    {
+        if ($advert->getUser() !== $this->getUser()) {
+            if ($advert->getBookingUser() === $this->getUser()) {
+                $advert->setBookingUser(null);
+            }
+            else {
+                $advert->setBookingUser($this->getUser());
+            }
+
+            $manager = $this->getDoctrine()->getManager();
+            $manager->flush();
+
+        }
+
+        return $this->redirectToRoute('advert_show', ['id' => $advert->getId() ]);
     }
 
     /**

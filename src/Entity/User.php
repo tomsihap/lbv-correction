@@ -53,9 +53,15 @@ class User implements UserInterface
      */
     private $adverts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Advert::class, mappedBy="bookingUser")
+     */
+    private $bookings;
+
     public function __construct()
     {
         $this->adverts = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -185,6 +191,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($advert->getUser() === $this) {
                 $advert->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Advert[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Advert $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setBookingUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Advert $booking): self
+    {
+        if ($this->bookings->contains($booking)) {
+            $this->bookings->removeElement($booking);
+            // set the owning side to null (unless already changed)
+            if ($booking->getBookingUser() === $this) {
+                $booking->setBookingUser(null);
             }
         }
 

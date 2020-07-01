@@ -41,14 +41,19 @@ class Advert
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isBooked = false;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bookings")
+     */
+    private $bookingUser;
 
     public function __construct() {
         $this->createdAt = new \DateTime();
@@ -107,18 +112,6 @@ class Advert
         return $this;
     }
 
-    public function getIsBooked(): ?bool
-    {
-        return $this->isBooked;
-    }
-
-    public function setIsBooked(bool $isBooked): self
-    {
-        $this->isBooked = $isBooked;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -127,6 +120,30 @@ class Advert
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBookingUser(): ?User
+    {
+        return $this->bookingUser;
+    }
+
+    public function setBookingUser(?User $bookingUser): self
+    {
+        $this->bookingUser = $bookingUser;
 
         return $this;
     }

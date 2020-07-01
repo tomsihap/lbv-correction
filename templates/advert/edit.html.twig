@@ -3,11 +3,13 @@
 {% block title %}Edit Advert{% endblock %}
 
 {% block body %}
-    <h1>Edit Advert</h1>
+    <h1>Éditer l'annonce</h1>
+    <a href="{{ path('advert_show', {id: advert.id}) }}">Revenir à l'annonce</a>
 
-    {{ include('advert/_form.html.twig', {'button_label': 'Update'}) }}
+    <hr>
 
-    <a href="{{ path('advert_index') }}">back to list</a>
+    {{ include('advert/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
 
     {{ include('advert/_delete_form.html.twig') }}
 {% endblock %}

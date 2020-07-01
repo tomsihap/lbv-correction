@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+    <h1>Mon profil</h1>
+    <div class="card">
+        <div class="card-header">Mes informations</div>
+        <div class="card-body">
+            <ul>
+                <li>Prénom : {{ app.user.firstname }}</li>
+                <li>Nom : {{ app.user.lastname }}</li>
+                <li>Email : {{ app.user.email }}</li>
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Mes annonces publiées</h2>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Date de publication</th>
+                    <th>Titre de l'annonce</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for advert in app.user.adverts %}
+                    <tr>
+                        <td>
+                            {{ advert.createdAt|date('d/m/Y à H:i') }}<br>
+                            <span class="badge badge-warning">Type d'annonce: {{ advert.type.name }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ path('advert_show', {'id': advert.id}) }}">{{ advert.name }}</a><br>
+
+                            {% if advert.bookingUser %}
+                                <span class="badge badge-danger">Réservée par {{ advert.bookingUser.firstname }} {{ advert.bookingUser.lastname }} ({{ advert.bookingUser.email }})</span>
+                            {% else %}
+                                <span class="badge badge-success">Réservée: Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">Aucune annonce pour le moment.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h2>Mes réservations</h2>
+
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Date de publication</th>
+                    <th>Titre de l'annonce</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for advert in app.user.bookings %}
+                    <tr>
+                        <td>
+                            {{ advert.createdAt|date('d/m/Y à H:i') }}<br>
+                            <span class="badge badge-warning">Type d'annonce: {{ advert.type.name }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ path('advert_show', {'id': advert.id}) }}">{{ advert.name }}</a><br>
+                            <span class="badge badge-primary">Marque: {{ advert.brand.name }}</span>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">Aucune annonce pour le moment.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
