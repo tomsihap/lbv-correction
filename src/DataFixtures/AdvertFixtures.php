@@ -69,7 +69,7 @@ class AdvertFixtures extends Fixture implements DependentFixtureInterface
         return [
             BrandFixtures::class,
             UserFixtures::class,
-            AdvertType::class
+            AdvertTypeFixtures::class
         ];
     }
 }
